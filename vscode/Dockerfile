@@ -7,7 +7,8 @@ ENV \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
     LC_ALL=en_US.UTF-8 \
-    PIP_BREAK_SYSTEM_PACKAGES=1
+    PIP_BREAK_SYSTEM_PACKAGES=1 \
+    EXTENSIONS_GALLERY='{"serviceUrl":"https://marketplace.visualstudio.com/_apis/public/gallery","itemUrl":"https://marketplace.visualstudio.com/items","cacheUrl":"https://vscode.blob.core.windows.net/gallery/index"}'
 
 # Set shell
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -77,10 +78,15 @@ RUN \
         echo "Installing vscode extension: ${slug} by ${vendor} @ ${version} "; \
         \
         echo "https://marketplace.visualstudio.com/_apis/public/gallery/publishers/${vendor}/vsextensions/${slug}/${version}/vspackage"; \
-        curl -JL --retry 5 -o "/tmp/${extention}-${version}.vsix" \
+        curl -JL --retry 5 -o "/tmp/${extention}-${version}.vsix.download" \
         -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36" \
         -H "x-market-user-id: ${uuid}" \
         "https://marketplace.visualstudio.com/_apis/public/gallery/publishers/${vendor}/vsextensions/${slug}/${version}/vspackage"; \
+        if file "/tmp/${extention}-${version}.vsix.download" | grep -q "gzip"; then \
+            gunzip -c "/tmp/${extention}-${version}.vsix.download" > "/tmp/${extention}-${version}.vsix"; \
+        else \
+            mv "/tmp/${extention}-${version}.vsix.download" "/tmp/${extention}-${version}.vsix"; \
+        fi; \
         mkdir -p "/usr/local/lib/code-server/lib/vscode/extensions/${extention}-${version}"; \
         bsdtar --strip-components=1 -xf "/tmp/${extention}-${version}.vsix" \
         -C "/usr/local/lib/code-server/lib/vscode/extensions/${extention}-${version}" extension; \
