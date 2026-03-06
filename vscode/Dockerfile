@@ -20,7 +20,7 @@ COPY vscode.extensions /root/vscode.extensions
 
 # Setup base system
 ARG BUILD_ARCH=amd64
-ARG CODE_SERVER_VERSION="v4.107.0"
+ARG CODE_SERVER_VERSION="v4.109.5"
 ARG HA_CLI_VERSION="4.45.0"
 # hadolint ignore=SC2181, DL3008
 RUN \
@@ -33,13 +33,13 @@ RUN \
         colordiff=1.0.21-1 \
         git=1:2.47.3-0+deb13u1 \
         iputils-ping=3:20240905-3 \
-        locales=2.41-12 \
+        locales=2.41-12+deb13u1 \
         mariadb-client=1:11.8.3-0+deb13u1 \
         mosquitto-clients=2.0.21-1 \
         net-tools=2.10-1.3 \
         nmap=7.95+dfsg-3 \
         openssh-client=1:10.0p1-7 \
-        openssl=3.5.4-1~deb13u1 \
+        openssl=3.5.4-1~deb13u2 \
         python3-dev=3.13.5-1 \
         python3-venv=3.13.5-1 \
         python3=3.13.5-1 \
@@ -47,7 +47,7 @@ RUN \
         uuid-runtime=2.41-5 \
         wget=1.25.0-2 \
         zip=3.0-15 \
-        zsh=5.9-8+b14 \
+        zsh=5.9-8+b18 \
         less=668-1 \
     \
     && sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
